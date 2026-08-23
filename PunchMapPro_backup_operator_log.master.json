@@ -1,0 +1,32 @@
+{
+  "_note": "PLACEHOLDER SEED. These are NOT real PMP drawing files — they exist only to show the entry structure. Replace by running: node PunchMapPro_backup_operator_log.js <sourceDir> --operator \"Your Name\" against your real ~700-file drawings folder, which will overwrite/update entries in place. Delete this _note key once real data has been loaded.",
+  "assets": {
+    "SAMPLE-0001": {
+      "id": "SAMPLE-0001",
+      "name": "sample-drawing-001.dwg",
+      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
+      "status": "missing",
+      "operator": "unknown",
+      "timestamp": "2026-08-23T00:00:00.000Z",
+      "firstLogged": "2026-08-23T00:00:00.000Z"
+    },
+    "SAMPLE-0002": {
+      "id": "SAMPLE-0002",
+      "name": "sample-drawing-002.pdf",
+      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
+      "status": "missing",
+      "operator": "unknown",
+      "timestamp": "2026-08-23T00:00:00.000Z",
+      "firstLogged": "2026-08-23T00:00:00.000Z"
+    },
+    "SAMPLE-0003": {
+      "id": "SAMPLE-0003",
+      "name": "sample-drawing-003.dxf",
+      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
+      "status": "missing",
+      "operator": "unknown",
+      "timestamp": "2026-08-23T00:00:00.000Z",
+      "firstLogged": "2026-08-23T00:00:00.000Z"
+    }
+  }
+}
