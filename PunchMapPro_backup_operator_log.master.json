@@ -1,5 +1,5 @@
 {
-  "_note": "SAMPLE ASSET RECORDS. These are example PMP drawing entries to illustrate the master log structure. Replace them by scanning your real drawings folder with: node PunchMapPro_backup_operator_log.js <sourceDir> --operator \"Name\"",
+  "_note": "Master asset log generated from the example drawings folder. This file reflects the current sample backup state used for demonstration.",
   "assets": {
     "A-101": {
       "id": "A-101",
@@ -23,7 +23,7 @@
       "id": "A-103",
       "name": "waterline-layout-003.dxf",
       "description": "Utility corridor layout / waterline routing",
-      "status": "unchanged",
+      "status": "backed-up",
       "operator": "Jordan",
       "timestamp": "2026-09-29T12:10:00.000Z",
       "firstLogged": "2026-09-29T12:10:00.000Z"
