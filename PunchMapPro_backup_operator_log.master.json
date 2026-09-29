@@ -1,32 +1,41 @@
 {
-  "_note": "PLACEHOLDER SEED. These are NOT real PMP drawing files — they exist only to show the entry structure. Replace by running: node PunchMapPro_backup_operator_log.js <sourceDir> --operator \"Your Name\" against your real ~700-file drawings folder, which will overwrite/update entries in place. Delete this _note key once real data has been loaded.",
+  "_note": "SAMPLE ASSET RECORDS. These are example PMP drawing entries to illustrate the master log structure. Replace them by scanning your real drawings folder with: node PunchMapPro_backup_operator_log.js <sourceDir> --operator \"Name\"",
   "assets": {
-    "SAMPLE-0001": {
-      "id": "SAMPLE-0001",
-      "name": "sample-drawing-001.dwg",
-      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
-      "status": "missing",
-      "operator": "unknown",
-      "timestamp": "2026-08-23T00:00:00.000Z",
-      "firstLogged": "2026-08-23T00:00:00.000Z"
+    "A-101": {
+      "id": "A-101",
+      "name": "north-shed-plot-001.dwg",
+      "description": "North shed site plan - phase 1",
+      "status": "backed-up",
+      "operator": "Jordan",
+      "timestamp": "2026-09-29T12:00:00.000Z",
+      "firstLogged": "2026-09-29T12:00:00.000Z"
     },
-    "SAMPLE-0002": {
-      "id": "SAMPLE-0002",
-      "name": "sample-drawing-002.pdf",
-      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
-      "status": "missing",
-      "operator": "unknown",
-      "timestamp": "2026-08-23T00:00:00.000Z",
-      "firstLogged": "2026-08-23T00:00:00.000Z"
+    "A-102": {
+      "id": "A-102",
+      "name": "south-lane-profile-002.pdf",
+      "description": "South lane profile and cut sheet",
+      "status": "backed-up",
+      "operator": "Jordan",
+      "timestamp": "2026-09-29T12:05:00.000Z",
+      "firstLogged": "2026-09-29T12:05:00.000Z"
     },
-    "SAMPLE-0003": {
-      "id": "SAMPLE-0003",
-      "name": "sample-drawing-003.dxf",
-      "description": "PLACEHOLDER entry — replace by scanning your real drawings folder",
+    "A-103": {
+      "id": "A-103",
+      "name": "waterline-layout-003.dxf",
+      "description": "Utility corridor layout / waterline routing",
+      "status": "unchanged",
+      "operator": "Jordan",
+      "timestamp": "2026-09-29T12:10:00.000Z",
+      "firstLogged": "2026-09-29T12:10:00.000Z"
+    },
+    "A-104": {
+      "id": "A-104",
+      "name": "access-road-revision-004.pdf",
+      "description": "Access road revision sheet - pending review",
       "status": "missing",
       "operator": "unknown",
-      "timestamp": "2026-08-23T00:00:00.000Z",
-      "firstLogged": "2026-08-23T00:00:00.000Z"
+      "timestamp": "2026-09-29T12:15:00.000Z",
+      "firstLogged": "2026-09-29T12:15:00.000Z"
     }
   }
 }
