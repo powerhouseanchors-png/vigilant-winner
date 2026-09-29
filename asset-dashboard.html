@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -6,6 +7,7 @@
     <style>
       :root {
         --bg: #0f172a;
+        --bg-2: #020817;
         --panel: #111827;
         --muted: #94a3b8;
         --card: #1f2937;
@@ -15,30 +17,101 @@
         --warn: #f59e0b;
         --bad: #ef4444;
         --blue: #60a5fa;
+        --input: #0b1220;
+        --shadow: rgba(15, 23, 42, 0.35);
       }
 
-      * { box-sizing: border-box; }
-      body {
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(180deg, #020817, var(--bg));
+        min-height: 100%;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(180deg, var(--bg-2), var(--bg));
         color: var(--text);
       }
 
       .container {
-        max-width: 1100px;
+        max-width: 1120px;
         margin: 0 auto;
-        padding: 32px 20px 60px;
+        padding: 32px 20px 64px;
       }
 
       h1 {
-        margin-bottom: 8px;
-        font-size: 2.1rem;
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 4vw, 2.6rem);
+        line-height: 1.2;
       }
 
       .subtitle {
         color: var(--muted);
-        margin-bottom: 24px;
+        margin: 0 0 24px;
+        font-size: 1rem;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 20px;
+      }
+
+      .search-wrap {
+        flex: 1 1 260px;
+        min-width: 200px;
+      }
+
+      .search-wrap input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(11, 18, 32, 0.9);
+        color: var(--text);
+        font-size: 0.95rem;
+      }
+
+      .search-wrap input::placeholder {
+        color: var(--muted);
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .filter-btn {
+        appearance: none;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(17, 24, 39, 0.9);
+        color: var(--text);
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .filter-btn:hover,
+      .filter-btn:focus-visible {
+        border-color: var(--blue);
+        outline: none;
+      }
+
+      .filter-btn.active {
+        background: rgba(96, 165, 250, 0.15);
+        border-color: rgba(96, 165, 250, 0.7);
+        color: #bfdbfe;
       }
 
       .stats {
@@ -53,6 +126,7 @@
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 18px;
+        box-shadow: 0 6px 20px var(--shadow);
       }
 
       .stat-label {
@@ -63,7 +137,7 @@
       }
 
       .stat-value {
-        font-size: 2rem;
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
         margin-top: 10px;
         font-weight: 700;
       }
@@ -80,6 +154,7 @@
         border-left: 5px solid var(--blue);
         border-radius: 12px;
         padding: 18px;
+        box-shadow: 0 8px 22px rgba(2, 8, 23, 0.2);
       }
 
       .asset-card[data-status="backed-up"] { border-left-color: var(--ok); }
@@ -96,7 +171,8 @@
 
       .asset-id {
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1.08rem;
+        word-break: break-word;
       }
 
       .badge {
@@ -106,6 +182,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 700;
+        white-space: nowrap;
       }
 
       .badge.backed-up { background: rgba(34, 197, 94, 0.15); color: #86efac; }
@@ -115,6 +192,7 @@
       .asset-name {
         font-size: 1.05rem;
         margin: 6px 0;
+        font-weight: 600;
       }
 
       .asset-desc {
@@ -130,13 +208,46 @@
         gap: 6px;
       }
 
-      .error {
+      .error,
+      .empty {
         color: #fca5a5;
         background: rgba(127, 29, 29, 0.25);
         border: 1px solid rgba(239, 68, 68, 0.4);
         padding: 14px 16px;
         border-radius: 10px;
         margin-top: 20px;
+      }
+
+      .empty {
+        color: var(--text);
+        background: rgba(17, 24, 39, 0.85);
+        border-color: var(--border);
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      @media (max-width: 640px) {
+        .toolbar {
+          align-items: stretch;
+        }
+
+        .filters {
+          width: 100%;
+        }
+
+        .filter-btn {
+          flex: 1 1 calc(50% - 8px);
+        }
       }
     </style>
   </head>
@@ -145,7 +256,26 @@
       <h1>PunchMapPro Asset Dashboard</h1>
       <div class="subtitle">Master backup log overview for PMP drawing assets</div>
 
-      <div class="stats">
+      <div class="toolbar" aria-label="Asset controls">
+        <div class="search-wrap">
+          <label class="visually-hidden" for="assetSearch">Search assets</label>
+          <input
+            id="assetSearch"
+            type="search"
+            placeholder="Search by asset ID or name..."
+            aria-label="Search assets"
+          />
+        </div>
+
+        <div class="filters" aria-label="Status filters">
+          <button class="filter-btn active" type="button" data-filter="all">All</button>
+          <button class="filter-btn" type="button" data-filter="backed-up">Backed Up</button>
+          <button class="filter-btn" type="button" data-filter="unchanged">Unchanged</button>
+          <button class="filter-btn" type="button" data-filter="missing">Missing</button>
+        </div>
+      </div>
+
+      <div class="stats" aria-live="polite">
         <div class="stat">
           <div class="stat-label">Total Assets</div>
           <div class="stat-value" id="totalAssets">0</div>
@@ -164,53 +294,147 @@
         </div>
       </div>
 
-      <div id="assetGrid" class="grid"></div>
+      <div id="assetGrid" class="grid" aria-live="polite"></div>
     </div>
 
     <script>
-      async function loadAssets() {
-        try {
-          const response = await fetch('./PunchMapPro_backup_operator_log.master.json');
-          if (!response.ok) throw new Error('Unable to load asset log.');
-          const data = await response.json();
-          const assets = Object.values(data.assets || {});
+      const DEFAULT_LOG_URL = './PunchMapPro_backup_operator_log.master.json';
+      const state = {
+        allAssets: [],
+        filter: 'all',
+        query: ''
+      };
 
-          const total = assets.length;
-          const backedUp = assets.filter(a => a.status === 'backed-up').length;
-          const unchanged = assets.filter(a => a.status === 'unchanged').length;
-          const missing = assets.filter(a => a.status === 'missing').length;
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
 
-          document.getElementById('totalAssets').textContent = total;
-          document.getElementById('backedUp').textContent = backedUp;
-          document.getElementById('unchanged').textContent = unchanged;
-          document.getElementById('missing').textContent = missing;
+      function sanitizeStatus(status) {
+        return ['backed-up', 'unchanged', 'missing'].includes(status) ? status : 'unchanged';
+      }
 
-          const grid = document.getElementById('assetGrid');
-          grid.innerHTML = assets
-            .sort((a, b) => a.id.localeCompare(b.id))
-            .map(asset => `
-              <article class="asset-card" data-status="${asset.status}">
-                <div class="asset-header">
-                  <div class="asset-id">${asset.id}</div>
-                  <span class="badge ${asset.status}">${asset.status}</span>
-                </div>
-                <div class="asset-name">${asset.name}</div>
-                <div class="asset-desc">${asset.description || 'No description available.'}</div>
-                <div class="meta">
-                  <div>Operator: ${asset.operator || 'unknown'}</div>
-                  <div>Updated: ${new Date(asset.timestamp).toLocaleString()}</div>
-                  <div>First logged: ${new Date(asset.firstLogged).toLocaleString()}</div>
-                </div>
-              </article>
-            `)
-            .join('');
-        } catch (error) {
-          document.getElementById('assetGrid').innerHTML = `
-            <div class="error">${error.message}</div>
+      function formatDate(value) {
+        if (!value) return 'N/A';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return 'Invalid date';
+
+        return new Intl.DateTimeFormat('en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        }).format(date);
+      }
+
+      function renderStats(assets) {
+        const total = assets.length;
+        const counts = {
+          'backed-up': assets.filter((a) => sanitizeStatus(a.status) === 'backed-up').length,
+          unchanged: assets.filter((a) => sanitizeStatus(a.status) === 'unchanged').length,
+          missing: assets.filter((a) => sanitizeStatus(a.status) === 'missing').length
+        };
+
+        document.getElementById('totalAssets').textContent = total;
+        document.getElementById('backedUp').textContent = counts['backed-up'];
+        document.getElementById('unchanged').textContent = counts.unchanged;
+        document.getElementById('missing').textContent = counts.missing;
+      }
+
+      function getFilteredAssets() {
+        const query = state.query.trim().toLowerCase();
+
+        return state.allAssets.filter((asset) => {
+          const status = sanitizeStatus(asset.status);
+          const matchesFilter = state.filter === 'all' || status === state.filter;
+          const haystack = `${asset.id || ''} ${asset.name || ''} ${asset.description || ''}`.toLowerCase();
+          const matchesQuery = !query || haystack.includes(query);
+          return matchesFilter && matchesQuery;
+        });
+      }
+
+      function renderAssets() {
+        const grid = document.getElementById('assetGrid');
+        const visibleAssets = getFilteredAssets();
+
+        if (!visibleAssets.length) {
+          grid.innerHTML = '<div class="empty">No matching assets found.</div>';
+          return;
+        }
+
+        const sorted = [...visibleAssets].sort((a, b) => (a.id || '').localeCompare(b.id || ''));
+
+        grid.innerHTML = sorted.map((asset) => {
+          const status = sanitizeStatus(asset.status);
+          const name = asset.name || 'Unnamed asset';
+          const description = asset.description || 'No description available.';
+          const operator = asset.operator || 'unknown';
+
+          return `
+            <article class="asset-card" data-status="${status}" aria-label="Asset ${escapeHtml(asset.id || name)}">
+              <div class="asset-header">
+                <div class="asset-id">${escapeHtml(asset.id || 'Unknown ID')}</div>
+                <span class="badge ${status}">${status}</span>
+              </div>
+              <div class="asset-name">${escapeHtml(name)}</div>
+              <div class="asset-desc">${escapeHtml(description)}</div>
+              <div class="meta">
+                <div>Operator: ${escapeHtml(operator)}</div>
+                <div>Updated: ${formatDate(asset.timestamp)}</div>
+                <div>First logged: ${formatDate(asset.firstLogged)}</div>
+              </div>
+            </article>
           `;
+        }).join('');
+      }
+
+      function attachHandlers() {
+        const searchInput = document.getElementById('assetSearch');
+        searchInput.addEventListener('input', (event) => {
+          state.query = event.target.value;
+          renderAssets();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach((button) => {
+          button.addEventListener('click', () => {
+            state.filter = button.dataset.filter;
+            document.querySelectorAll('.filter-btn').forEach((btn) => {
+              btn.classList.toggle('active', btn === button);
+            });
+            renderAssets();
+          });
+        });
+      }
+
+      async function loadAssets() {
+        const grid = document.getElementById('assetGrid');
+        grid.innerHTML = '<div class="empty" aria-live="polite">Loading assets...</div>';
+
+        try {
+          const queryUrl = new URLSearchParams(window.location.search).get('data');
+          const dataUrl = queryUrl || window.ASSET_LOG_URL || DEFAULT_LOG_URL;
+
+          const response = await fetch(dataUrl, { cache: 'no-store' });
+          if (!response.ok) {
+            throw new Error(`Unable to load asset log (${response.status}).`);
+          }
+
+          const data = await response.json();
+          const assets = Array.isArray(data.assets)
+            ? data.assets
+            : Object.values(data.assets || {});
+
+          state.allAssets = assets;
+          renderStats(assets);
+          renderAssets();
+        } catch (error) {
+          grid.innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
         }
       }
 
+      attachHandlers();
       loadAssets();
     </script>
   </body>
