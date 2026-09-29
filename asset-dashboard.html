@@ -1,0 +1,217 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PunchMapPro Asset Dashboard</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --muted: #94a3b8;
+        --card: #1f2937;
+        --text: #e5e7eb;
+        --border: #334155;
+        --ok: #22c55e;
+        --warn: #f59e0b;
+        --bad: #ef4444;
+        --blue: #60a5fa;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(180deg, #020817, var(--bg));
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 60px;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+        font-size: 2.1rem;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .stat {
+        background: rgba(31, 41, 55, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        margin-top: 10px;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      .asset-card {
+        background: rgba(17, 24, 39, 0.95);
+        border: 1px solid var(--border);
+        border-left: 5px solid var(--blue);
+        border-radius: 12px;
+        padding: 18px;
+      }
+
+      .asset-card[data-status="backed-up"] { border-left-color: var(--ok); }
+      .asset-card[data-status="unchanged"] { border-left-color: var(--warn); }
+      .asset-card[data-status="missing"] { border-left-color: var(--bad); }
+
+      .asset-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .asset-id {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .badge {
+        padding: 5px 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+      }
+
+      .badge.backed-up { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+      .badge.unchanged { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+      .badge.missing { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+
+      .asset-name {
+        font-size: 1.05rem;
+        margin: 6px 0;
+      }
+
+      .asset-desc {
+        color: var(--muted);
+        margin-bottom: 12px;
+        line-height: 1.45;
+      }
+
+      .meta {
+        font-size: 0.85rem;
+        color: var(--muted);
+        display: grid;
+        gap: 6px;
+      }
+
+      .error {
+        color: #fca5a5;
+        background: rgba(127, 29, 29, 0.25);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>PunchMapPro Asset Dashboard</h1>
+      <div class="subtitle">Master backup log overview for PMP drawing assets</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Total Assets</div>
+          <div class="stat-value" id="totalAssets">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Backed Up</div>
+          <div class="stat-value" id="backedUp">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Unchanged</div>
+          <div class="stat-value" id="unchanged">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Missing</div>
+          <div class="stat-value" id="missing">0</div>
+        </div>
+      </div>
+
+      <div id="assetGrid" class="grid"></div>
+    </div>
+
+    <script>
+      async function loadAssets() {
+        try {
+          const response = await fetch('./PunchMapPro_backup_operator_log.master.json');
+          if (!response.ok) throw new Error('Unable to load asset log.');
+          const data = await response.json();
+          const assets = Object.values(data.assets || {});
+
+          const total = assets.length;
+          const backedUp = assets.filter(a => a.status === 'backed-up').length;
+          const unchanged = assets.filter(a => a.status === 'unchanged').length;
+          const missing = assets.filter(a => a.status === 'missing').length;
+
+          document.getElementById('totalAssets').textContent = total;
+          document.getElementById('backedUp').textContent = backedUp;
+          document.getElementById('unchanged').textContent = unchanged;
+          document.getElementById('missing').textContent = missing;
+
+          const grid = document.getElementById('assetGrid');
+          grid.innerHTML = assets
+            .sort((a, b) => a.id.localeCompare(b.id))
+            .map(asset => `
+              <article class="asset-card" data-status="${asset.status}">
+                <div class="asset-header">
+                  <div class="asset-id">${asset.id}</div>
+                  <span class="badge ${asset.status}">${asset.status}</span>
+                </div>
+                <div class="asset-name">${asset.name}</div>
+                <div class="asset-desc">${asset.description || 'No description available.'}</div>
+                <div class="meta">
+                  <div>Operator: ${asset.operator || 'unknown'}</div>
+                  <div>Updated: ${new Date(asset.timestamp).toLocaleString()}</div>
+                  <div>First logged: ${new Date(asset.firstLogged).toLocaleString()}</div>
+                </div>
+              </article>
+            `)
+            .join('');
+        } catch (error) {
+          document.getElementById('assetGrid').innerHTML = `
+            <div class="error">${error.message}</div>
+          `;
+        }
+      }
+
+      loadAssets();
+    </script>
+  </body>
+</html>
